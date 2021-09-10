@@ -7,7 +7,7 @@ _Fourth Year Student studying Mathematics and Statistical Sciences at the Univer
 ## Education
 
 **Honours Bachelor Of Science in Mathematics and Statistics** <br>
-<sup>_(September 2018 - June 2022)_ <\sup> <br>
+<sup>_(September 2018 - June 2022)_ </sup> <br>
 _[University of Toronto (St. George)](https://www.utoronto.ca/), Toronto, ON_
 
 ## Technical Skills
