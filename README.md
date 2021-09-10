@@ -14,12 +14,12 @@ _[University of Toronto (St. George)](https://www.utoronto.ca/), Toronto, ON_
 
 I am proficient and have experience in the following languages and IDEs:
   - R (dplyr, ggplot2, forcats, tibble, tidyr, Knitr)  
-    - RStudio
+    ◦ RStudio
   - Python (NumPy, pandas)  
-    - PyCharm 
-    - WING
+    ◦ PyCharm 
+    ◦ WING
   - Java  
-    - IntelliJ IDEA   
+    ◦ IntelliJ IDEA   
   - HTML & CSS  
   - LaTeX  
 
