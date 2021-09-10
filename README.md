@@ -16,7 +16,7 @@ I am proficient and have experience in the following languages and IDEs:
   - R (dplyr, ggplot2, forcats, tibble, tidyr, Knitr)  
     ◦ RStudio  
   - Python (NumPy, pandas)  
-    ◦ PyCharm   
+    ◦ PyCharm  <br>  
     ◦ WING  
   - Java  
     ◦ IntelliJ IDEA  
