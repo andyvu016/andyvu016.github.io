@@ -16,7 +16,9 @@ I am proficient and have experience in the following languages and IDEs:
     * RStudio
   * Python (NumPy, pandas)
     * PyCharm 
-    * WING 
+    * WING
+  * Java
+    * IntelliJ IDEA   
   * HTML & CSS
   * LaTeX
 
