@@ -1,37 +1,32 @@
-## Welcome to GitHub Pages
+# Andy Vu
 
-You can use the [editor on GitHub](https://github.com/andyvu016/cv/edit/gh-pages/index.md) to maintain and preview the content for your website in Markdown files.
+_Fourth Year Student studying Mathematics and Statistical Sciences at the University of Toronto (St. George)_ <br>
 
-Whenever you commit to this repository, GitHub Pages will run [Jekyll](https://jekyllrb.com/) to rebuild the pages in your site, from the content in your Markdown files.
+[Email](mailto:andy.vu@mail.utoronto.ca) / [GitHub](https://github.com/andyvu016/)
 
-### Markdown
+## Education
 
-Markdown is a lightweight and easy-to-use syntax for styling your writing. It includes conventions for
+**Honours Bachelor Of Science in Mathematics and Statistics** _(September 2018 - June 2022)_ <br>
+_[University of Toronto (St. George)](https://www.utoronto.ca/), Toronto, ON_
 
-```markdown
-Syntax highlighted code block
+## Technical Skills
 
-# Header 1
-## Header 2
-### Header 3
+I am proficient and have experience in the following languages and IDEs:
+  - R (dplyr, ggplot2, forcats, tibble, tidyr, Knitr)
+    - RStudio
+  - Python (NumPy, pandas)
+    - PyCharm 
+    - WING 
+  - HTML & CSS
+  - LaTeX
 
-- Bulleted
-- List
+## Experience
 
-1. Numbered
-2. List
 
-**Bold** and _Italic_ and `Code` text
+## Projects
 
-[Link](url) and ![Image](src)
-```
 
-For more details see [GitHub Flavored Markdown](https://guides.github.com/features/mastering-markdown/).
+## Languages
 
-### Jekyll Themes
-
-Your Pages site will use the layout and styles from the Jekyll theme you have selected in your [repository settings](https://github.com/andyvu016/cv/settings/pages). The name of this theme is saved in the Jekyll `_config.yml` configuration file.
-
-### Support or Contact
-
-Having trouble with Pages? Check out our [documentation](https://docs.github.com/categories/github-pages-basics/) or [contact support](https://support.github.com/contact) and we’ll help you sort it out.
+**English**: Native
+**Vietnamese**: Mother Tongue
