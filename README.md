@@ -28,5 +28,5 @@ I am proficient and have experience in the following languages and IDEs:
 
 ## Languages
 
-**English**: Native
+**English**: Native <br>
 **Vietnamese**: Mother Tongue
