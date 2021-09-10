@@ -13,15 +13,15 @@ _[University of Toronto (St. George)](https://www.utoronto.ca/), Toronto, ON_
 ## Technical Skills
 
 I am proficient and have experience in the following languages and IDEs:
-  - *R* (dplyr, ggplot2, forcats, tibble, tidyr, Knitr)  
+  - **R** (dplyr, ggplot2, forcats, tibble, tidyr, Knitr)  
     ◦ RStudio  
-  - *Python* (NumPy, pandas)  
+  - **Python** (NumPy, pandas)  
     ◦ PyCharm <br>
     ◦ WING  
-  - *Java*  
+  - **Java**  
     ◦ IntelliJ IDEA  
-  - *HTML & CSS*    
-  - *LaTeX*   
+  - **HTML & CSS**   
+  - **LaTeX**   
 
 ## Experience
 
