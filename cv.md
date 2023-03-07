@@ -1,5 +1,5 @@
 ---
-layout: page
+layout: default
 title: Andy Vu's CV
 permalink: /
 ---
