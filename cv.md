@@ -1,8 +1,14 @@
+---
+layout: page
+title: Andy Vu's CV
+permalink: /
+---
+
 # Andy Vu
 
 _Mathematics and Statistical Sciences Graduate_ <br>
 
-[Email](mailto:andy.vu@mail.utoronto.ca) / [GitHub](https://github.com/andyvu016/)
+[Email](mailto:andy.vu@alum.utoronto.ca) / [GitHub](https://github.com/andyvu016/)
 
 ## Education
 
