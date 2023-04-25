@@ -1,0 +1,463 @@
+---
+title: "Analyzing the Gateway to Vaping "
+author: "Andy Vu - 1005244932"
+date: December 19, 2021
+output:
+  pdf_document: default
+---
+
+```{r, include=FALSE}
+knitr::opts_chunk$set(warning = FALSE, message = FALSE)
+library(openintro)
+library(tidyverse)
+library(knitr)
+library(broom)
+library(reshape2)
+library(arm)
+library(huxtable)
+library(kableExtra)
+```
+
+
+
+# Abstract
+
+Vaping is a relatively new product that has become increasingly popular throughout the last few years. Even though vaping is marketed towards smokers, there has been an influx in teen vaping exposing youth to nicotine, a harmful and addictive drug. This analysis aims to investigate if smoking is the biggest factor for one to try vaping. The Canadian Tobacco and Nicotine Survey has been able to capture data related to vaping, smoking, and other government-regulated drugs. Variables such as gender, age, province, and smoking, vaping, and cannabis usage, as well as which was used first have been taken from the survey data for analysis. Propensity Score Matching was used to designate a treatment and control group based on whether or not the respondent has tried smoking. A logistics model was then created from the resulting subset of the data with trying vaping for the first time as the response variable and tried smoking as one of the explanatory variables. The model showed that the biggest factor that affected one trying vaping for the first time was age. Predictably, those who are younger had a much higher probability of trying vaping for the first time than those who are older. Youth should not be trying vaping especially since it can contain nicotine. Ultimately, it is a problem that a product marketed to smokers is being tried more commonly amongst youths. 
+
+## Keywords: Canadian Tobacco and Nicotine Survey, Teen Vaping, Smoking and Cannabis, Causal Inference, Logistic Regression, Propensity Score Matching, Odds and Probability.
+
+
+# Introduction
+
+Smoking tobacco is probably one of the most heavily researched topics of the 21st century. There have been extensive studies on smoking, connecting it to various adverse health effects (Canada, 2016). Moreover, not only is smoking bad for one’s health, but it is also highly addictive (Canada, 2013). The main component that makes smoking tobacco addictive is the drug known as nicotine (Canada, 2013). Vaping claims to give the same feeling like smoking tobacco, but without the negative effects (Canada, 2020). Thus, it seems like many smokers have turned to vaping as an alternative (Canada, 2020). However, the underlying problem is that not all those who vape were previously smokers (Canada, 2021). Therefore, vaping itself has spawned its own wave of users (Canada, 2021). 
+
+Generally, many factors influence a person to try a drug such as nicotine. With vaping being the new “cool” thing and its accessibility, many teenagers are trying it and getting hooked (Canada, 2021). A major concern with vaping is that nicotine may become a gateway drug to other more extreme drugs (Canada, 2021). That being said, the goal of this analysis is to **determine the effect that smoking tobacco has on the probability of a person trying vaping for the first time.** It is also important to understand which factors affect the probability of one vaping for the first time if it is not because of smoking. With the given facts, the hypothesis is that smoking will have some effect on the probability of a person trying vaping for the first time, but it will not be the biggest factor. Knowing that teens can easily be socially influenced, it would not be a surprise if they have a high probability of trying vaping for the first time without having previously smoked tobacco (Canada, 2021).
+
+The data that will be used in this analysis is from the Canadian Tobacco and Nicotine Survey (CTNS) (Government of Canada, 2020). This survey collects data relating to vaping, cannabis, and tobacco usage throughout Canada (Government of Canada, 2020). 
+
+# Data
+
+## Data Collection Process
+
+The data from the Canadian Tobacco and Nicotine Survey (CTNS) was collected between December 2020 to January 2021 (Government of Canada, 2020). The survey targeted people 15 years of age or older residing in any of the ten provinces in Canada (Government of Canada, 2020). A stratified sampling and cross-sectional design were used to survey the population electronically (Government of Canada, 2020). All the responses from the survey are voluntary and collected directly from the respondent (Government of Canada, 2020). The overall response rate was about 41% of the approximately 20,000 surveys that were sent out (Government of Canada, 2020). 
+
+## Data Summary
+
+The dataset from the Canadian Tobacco and Nicotine Survey includes all the necessary variables such as whether or not the respondent had tried vaping, smoking, or using any other regulated drugs such as cannabis or alcohol in their lifetime (Government of Canada, 2020). Besides this, the dataset also provides an age group of the respondent, as well as their gender and province of residence (Government of Canada, 2020). A key aspect of this survey is that there is a specific question that asks the respondent which of the 3 possible products they have tried first. This variable is important to the model that will be used later in the analysis. Since the variable of interest is the probability that a person would try vaping for the first time, the model’s estimate should be nearly 100%, if not 100% if the respondent had responded with vaping as their first product tried. Overall, the goal of this survey is to provide a snapshot of cigarette smoking, vaping, and cannabis use throughout Canada (Government of Canada, 2020).  The sample size of the dataset is 8112 with 99 variables. 
+
+```{r, include = FALSE}
+
+raw_ctns_data <- read_csv("ctns.csv")
+
+```
+
+```{r, include = FALSE}
+
+survey_data <- raw_ctns_data %>% 
+  subset(select = c("GENDER", "AGEGROUP", "PROV_C", "TBC_05AR","VAP_05AR","CAN_05AR", "FIRSTTRR"))
+
+```
+
+```{r, include = FALSE}
+
+survey_data <- survey_data %>% 
+  rename(gender = GENDER) %>% 
+  mutate(gender = case_when(
+    gender == 1 ~ "Male",
+    gender == 2 ~ "Female"
+  )) %>%
+  rename(age = AGEGROUP) %>% 
+  mutate(age = case_when(
+    age == 1 ~ "15-19 years old",
+    age == 2 ~ "20-24 years old",
+    age == 3 ~ "25-34 years old",
+    age == 4 ~ "35-44 years old",
+    age == 5 ~ "45-54 years old",
+    age == 6 ~ "55-64 years old",
+    age == 7 ~ "65+ years old"
+  )) %>% 
+  rename(province = PROV_C) %>%
+  mutate(province = case_when(
+    province == 10 ~ "Newfoundland and Labrador",
+    province == 11 ~ "Prince Edward Island",
+    province == 12 ~ "Nova Scotia",
+    province == 13 ~ "New Brunswick",
+    province == 24 ~ "Quebec",
+    province == 35 ~ "Ontario",
+    province == 46 ~ "Manitoba",
+    province == 47 ~ "Saskatchewan",
+    province == 48 ~ "Alberta",
+    province == 59 ~ "British Columbia"
+  )) %>%
+  rename(smoked = TBC_05AR) %>%
+  mutate(smoked = case_when(
+    smoked == 1 ~ 1,
+    smoked == 2 ~ 0
+  )) %>%
+  rename(vaped = VAP_05AR) %>%
+  mutate(vaped = case_when(
+    vaped == 1 ~ 1,
+    vaped == 2 ~ 0
+  )) %>%
+  rename(cannabis = CAN_05AR) %>%
+  mutate(cannabis = case_when(
+    cannabis == 1 ~ 1,
+    cannabis == 2 ~ 0
+  )) %>%
+  rename(first = FIRSTTRR) %>% 
+  mutate(first = case_when(
+    first == 1 ~ "Smoking",
+    first == 2 ~ "Vaping",
+    first == 3 ~ "Cannabis",
+    first == 6 ~ "None",
+  )) %>% 
+  na.omit() %>%
+  mutate(vaped_first = ifelse(first=="Vaping", 1, 0)) %>% 
+  mutate(remove = case_when(
+    first == "Cannabis" & cannabis == 0 ~ NaN,
+    TRUE ~ 1
+  )) %>% 
+  na.omit() %>% 
+  subset(select = -9)
+
+```
+
+### Data Cleaning
+
+Of the 99 possible variables, there will only be 7 specific variables that will be taken from the dataset to be used in this analysis. The variables are the respondents’ gender, age group, province of residence, whether or not they have tried smoking, whether or not they have tried vaping, whether or not they have tried cannabis and which of the three they had tried first.
+
+The first responses to map are the ones for the Gender variable. In the case of the survey, there were only two possible responses, either Male or Female. The following responses to map are the ones corresponding to the age groups. There are a total of 7 age groups: 15-19 years old, 20-24 years old, 25-34 years old, 35-44 years old, 45-54 years old, 55-64 years old, and 65 years old and older. The next responses are the ones for the province variable. In this case, there are the standard 10 provinces of Canada: Newfoundland and Labrador, Prince Edward Island, Nova Scotia, New Brunswick, Quebec, Ontario, Manitoba, Saskatchewan, Alberta, and British Colombia. The next three responses to map are the ones corresponding to whether or not the respondent has tried smoking, vaping, or cannabis. These responses are mapped to 1 if they have tried the corresponding product and 0 if they have not tried the corresponding product. The last set of responses to map is the one for the first product that the respondent has tried. The possible responses are Smoking, Vaping, Cannabis, or None. After mapping each response, any observations with invalid responses will be omitted from the analysis to ensure a complete dataset.
+
+The most important step now is to create a new variable for whether or not the first product that the respondent tried is Vaping. This variable will be created based on the response from the variable that asks which of the products the respondent has tried first. This variable will be either 1 if Vaping was the first product tried and 0 otherwise. It is important to create this variable instead of using the variable for whether the respondent has tried vaping in their lifetime because the model should be able to determine the probability of trying vaping for the first time of those who have never tried any of the products before. For example, one respondent may have tried vaping before so it would not the first product they had tried, whereas for another respondent vaping would be their first product if they have has never tried any of the three products before.
+
+Finally, 8 observations responded with having tried Cannabis as their first product but previously responded to never having tried Cannabis before. These are invalid observations and are hence omitted. 
+
+### Description of Varibles
+
+|     **Variable**    	|     **Description**                                                                                       	|
+|---------------------	|-----------------------------------------------------------------------------------------------------------	|
+|     Gender          	|     The gender of   the respondent. (Male or Female)                                                      	|
+|     Age Group       	|     The age group of   the respondent ranging from 15 to 65 years of age and older.                       	|
+|     Province        	|     The province in   which the respondent resides.                                                       	|
+|     Smoked          	|     Whether or not   the respondent had tried smoking in their lifetime. (1 if they have, 0 if not)       	|
+|     Vaped           	|     Whether or not   the respondent had tried vaping in their lifetime. (1 if they have, 0 if not)        	|
+|     Cannabis        	|     Whether or not   the respondent had tried cannabis in their lifetime. (1 if they have, 0 if   not)    	|
+|     Tried First     	|     The product that   the respondent has tried first. (Smoking, Vaping, Cannabis, None)                  	|
+|     Vaping First    	|     Whether or not   the respondent had tried Vaping first. (1 if they have, 0 if not)                    	|
+
+Table: Description of Important Variables
+
+
+### Numerical Summaries and Plots
+
+As seen in Table 2, the majority of the respondents have tried either smoking, vaping, or cannabis, with 3020 responding to having tried smoking as their first product. This is followed by 1264 respondents who have tried cannabis as their first product and only 484 who have tried vaping as their first product. On the other hand, 3237 respondents have never tried any of these products before. 
+
+```{r, echo = FALSE}
+
+survey_data <- survey_data %>% 
+  mutate(first = factor(first, levels = c("Smoking", "Vaping", "Cannabis", "None")))
+kable(table(survey_data$first), col.names=c("Product", "Frequency"), caption = "Summary of the First Product Tried", booktabs = TRUE) 
+
+```
+
+```{r, echo = FALSE}
+
+vapingtable <- table(survey_data$vaped_first)
+rownames(vapingtable) <- c("False", "True")
+kable(vapingtable, col.names=c("Vaping First", "Frequency"), caption = "Summary of Vaping being the First Product", booktabs = TRUE) 
+
+```
+
+Following up with Table 2, Table 3 shows the distribution of the variable of interest. Table 3 shows that 484 respondents tried vaping as their first product and 7521 respondents have tried other products first or no products at all.
+
+```{r age_plot, echo=FALSE, warning=FALSE, fig.cap="Summary of the Age Groups by Gender", out.width="90%", fig.align='center'}
+
+survey_data %>%
+  group_by(age, gender) %>%
+  summarize(n=n()) %>% 
+  mutate(freq=n) %>% 
+  ggplot(aes(x = age, fill = gender, group = gender)) +
+  geom_bar(aes(y=freq), stat = "identity", position="dodge") +
+  scale_x_discrete(guide = guide_axis(n.dodge=3)) +
+  theme_minimal() +
+  labs(title = "Summary of the Age Groups by Gender",
+       x = "Age Group",
+       y = "Count",
+       fill = "Gender")
+
+```
+
+\newpage
+
+As seen in Figure 1, the distribution of Gender seems to be about the same across all age groups. This means that there are as many respondents who identify as the Male gender as there are those who identify as the Female gender. The number of respondents in each age group also seems to be equally distributed. Although there is a significantly greater portion of the sample who is part of the 65 years of age and older group, this can easily be explained by the age range that is covered. 65 years of age and older covers a larger range of ages in comparison to the 5-year or 10-year ranges that the other age groups cover.
+
+```{r province_plot, echo=FALSE, warning=FALSE, fig.cap="Summary of Province of Residence by Gender", out.width="90%", fig.align='center'}
+
+survey_data %>%
+  group_by(province, gender) %>%
+  summarize(n=n()) %>% 
+  mutate(freq=n) %>% 
+  ggplot(aes(x = province, fill = gender, group = gender)) +
+  geom_bar(aes(y=freq), stat = "identity", position="dodge") +
+  scale_x_discrete(guide = guide_axis(n.dodge=3)) +
+  theme_minimal() +
+  labs(title = "Summary of Province of Residence by Gender",
+       x = "Province",
+       y = "Count",
+       fill = "Gender")
+
+```
+
+In Figure 2, the Gender distribution is as expected with each gender having about the same distribution in each province. The only significant observation is that most of the respondents in the sample reside in Ontario, followed by Quebec. This may imply that the survey is heavily weighted by the responses of those living in Ontario and Quebec. However, it is important to note that the majority of the population of Canada resides in Ontario, followed by Quebec (Government of Canada, 2018). Thus, it follows that the sample used for this survey does in fact give a good representation for the population of Canada as expected.  
+
+```{r product_plot, echo=FALSE, warning=FALSE, fig.cap="Summary of Products Tried", out.width="90%", fig.align='center'}
+
+survey_data %>%
+  subset(select = -c(1,2,3,8)) %>%
+  mutate(none = ifelse(first=="None", 1, 0)) %>% 
+  melt() %>%
+  group_by(first, variable, value) %>%
+  summarize(n=n()) %>% 
+  mutate(freq=n) %>%
+  filter(value == 1) %>% 
+  ggplot(aes(x = first, fill = variable, group = variable)) +
+  geom_bar(aes(y=freq), stat = "identity", position="dodge") +
+  scale_x_discrete(limits = c("Smoking", "Vaping", "Cannabis", "None")) +
+  scale_fill_discrete(labels = c("Smoking", "Vaping", "Cannabis", "None")) +
+  theme_minimal() +
+  labs(title = "Summary of Products Tried",
+       x = "Product Tried First",
+       y = "Count",
+       fill = "Products Tried")
+
+```
+
+Figure 3 depicts the products tried by the respondent by the first product they have tried. Some key observations are that there is a larger proportion of the respondents who also tried cannabis and responded to having tried smoking as their first product. Similarly, there is a large proportion of respondents who tried cannabis and responded to having tried vaping as their first product. On the other hand, for those who responded to having tried cannabis as their first product, there is about an equal proportion who also tried smoking and/or vaping afterward. As for the respondent who tried none of the products, there is nothing notable here.  
+
+All analysis for this report was programmed using `R version 4.0.5`.
+
+\newpage
+
+# Methods
+
+Since the data that is used in this analysis is based on a survey, it is classified as observational data. The goal of this analysis is to possibly find a causal relationship between trying vaping for the first time and having previously tried smoking. However, the problem is that there is no clear indication of treatment or control groups. For this reason, the main method that will be executed in this analysis is Propensity Score Matching. 
+
+The first step in Propensity Score Matching is to construct a logistic regression model to assign a probability/propensity score to each observation. In the case of this analysis, the response for the model will be whether or not the respondent has tried smoking in their lifetime. Similarly, since the overall variable of interest is whether or not the respondent will try vaping as their first product, the corresponding variable will be excluded from this model that is being used for assigning the propensity scores. Thus, the model that will be used to assign the propensity scores will have all of the remaining variables as explanatory variables. In addition, using this model assumes all the observations are independent and identically distributed. 
+
+After constructing the logistic regression model, a vector of probability estimates from the model will be appended to the data. This is so that each observation has a propensity score for whether or not the respondent has tried smoking for the first time, regardless of if they did or not. The next step is to now compare the observations and match observations of similar propensity scores, but different outcomes. That is two respondents with the same propensity score, but with one who has indeed tried smoking for the first time, and one who has not. A nearest neighbour matching approach will be used, which can easily be implemented using the matching function from the `arm` package in `R` (Gelman & Hill, 2006). 
+
+After matching, the resulting dataset will be reduced. This is due to the possibility that there are observations that had no matches. Regardless, the new dataset will then be used to construct a new logistic regression model with the response variable being whether or not the respondent has tried vaping for the first time. Model selection will then be implemented starting with a full model of all the explanatory variables, where the variable for whether or not the respondent has tried smoking for the first time is included here. A simple method of removing variables with non-significant p-values, i.e., p-values greater or equal to 0.05, will be used to select the explanatory variables and determine the final model.
+
+## Model
+
+In both cases, the logistic regression model will be of the form,
+$$\hat{y} = \beta_0 + \beta_1 x_1 + \beta_2x_2 + ... +\beta_kx_k \text{,}$$
+where $\hat{y}$ is the estimated log-odds, each $\beta_i$ represents the average change in log-odds corresponding to the $\text{i}^{th}$ factor level and $x_i$ is only either 1, if the corresponding $\text{i}^{th}$ factor level is present, and 0 if not, since all of the explanatory variables are categorical.
+
+# Results 
+
+```{r, include = FALSE}
+
+# Propensity Score Model
+propensity_score <- glm(smoked ~ gender + age + province + factor(vaped) + factor(cannabis) + first, family = binomial, data = survey_data)
+
+# Appending Propensity Scores into Dataset
+survey_data_matched <- augment(propensity_score, data = survey_data, type.predict = "response") %>% 
+  dplyr::select(-.resid, -.std.resid, -.hat, -.sigma, -.cooksd)
+
+# Matching
+survey_data_matched <- survey_data_matched %>% 
+  arrange(.fitted, smoked)
+
+survey_data_matched$treated <- 
+  if_else(survey_data_matched$smoked == 0, 0, 1)
+
+survey_data_matched$treated <- 
+  as.integer(survey_data_matched$treated)
+
+matches <- arm::matching(z = survey_data_matched$treated, score = survey_data_matched$.fitted)
+
+survey_data_matched <- cbind(survey_data_matched, matches)
+
+# Reducing Dataset
+
+survey_data_matched <- survey_data_matched %>% 
+  filter(match.ind != 0) %>% 
+  dplyr::select(-match.ind, -pairs, -treated)
+```
+
+After executing the Propensity Score Matching method, the resulting matched dataset shrunk to 7140 observations from the 8005 observations before matching. As seen in Table 7 in the Appendix, there is the same number of observations for those who had tried smoking in their lifetime and those who had not. This dataset is then used to create a logistic regression model where the variable for whether or not the respondent tried Vaping as their first product is the response variable and the remaining variables are the explanatory variables.
+
+```{r, include = FALSE}
+# Final Model
+
+model1 <- glm(vaped_first ~ gender + age + province + factor(smoked) + factor(vaped) + factor(cannabis) + first, family = binomial, data = survey_data_matched)
+model2 <- glm(vaped_first ~ gender + age + province + factor(smoked) + factor(vaped) + factor(cannabis), family = binomial, data = survey_data_matched)
+model3 <- glm(vaped_first ~ gender + age + factor(smoked) + factor(cannabis), family = binomial, data = survey_data_matched)
+
+finalmodel <- model3
+```
+
+The first model as seen in Table 8 in the Appendix is the full model. It seems like the variable for the first product that the respondent tried with Vaping as one of its factor levels carried all of the weight. This left the coefficients for all of the other factor levels to essentially be 0 and the algorithm to not converge. This should have been expected since the response variable was created from this variable. In either case, it is the first variable to be removed from the final model. 
+
+With the new model, it is evident from Table 8 in the Appendix, that the province factor levels have insignificant p-values. Hence, the variable for the province is removed from the final model. Since the model is to estimate the probability of a person trying Vaping for the first time, it also makes sense to remove the explanatory variable that corresponds to whether or not the respondent has vaped for the first time. Thus, the resulting model is the one that has the explanatory variables for gender, age group, whether or not the respondent has tried smoking, and whether or not the respondent has tried cannabis. It is also important to note here that the matched variable, that is whether or not the respondent has tried smoking in their lifetime, is significant from its low p-value.  
+
+```{r, echo = FALSE}
+
+huxreg(finalmodel, error_pos = "right") %>% 
+  set_caption("Summary of Final Model")
+
+```
+
+A summary of the final model can be seen in Table 4, where all of the estimates are in terms of log-odds. Then, to better interpret the results, the log-odds estimates have been converted to probabilities in Table 5 and odd ratios in Table 6, by the formula below. That is, since the model is of the form,
+
+\begin{align*} 
+\hat{y} &= \beta_0 + \beta_1 x_1 + \beta_2x_2 + ... +\beta_kx_k \\
+\widehat{\log{(\frac{p}{1-p}})} &= \beta_0 + \beta_1 x_1 + \beta_2x_2 + ... +\beta_kx_k \\
+\widehat{\frac{p}{1-p}} &= \exp{(\beta_0 + \beta_1 x_1 + \beta_2x_2 + ... +\beta_kx_k)} \\
+\hat{p} &= \frac{\exp{(\beta_0 + \beta_1 x_1 + \beta_2x_2 + ... +\beta_kx_k)}}{1 + \exp{(\beta_0 + \beta_1 x_1 + \beta_2x_2 + ... +\beta_kx_k)}} 
+\end{align*}
+
+```{r, echo = FALSE}
+
+probabilitytable <- round(exp(coefficients(finalmodel))/(1+exp(coefficients(finalmodel))), digits = 5)
+probabilitytable <- cbind(c("Default Group *", "Male", "20-24 years old", "25-34 years old", "35-44 years old", "45-54 years old", "55-64 years old", "65 years old and older", "Tired Smoking", "Tried Cannabis"), probabilitytable)
+rownames(probabilitytable) <- NULL
+
+kable(probabilitytable, col.names=c("", "Estimated Probability"), caption = "Summary of Final Model Probability Estimates With Respect to the Default Group", booktabs = TRUE) %>% 
+   kable_styling() %>%
+   add_footnote("Default Group: Female, 15-19 years old, Never Tried Smoking, and Never Tried Cannabis", notation = "symbol")
+
+```
+
+```{r, echo = FALSE}
+
+oddstable <- round(exp(coefficients(finalmodel)), digits = 5)
+oddstable <- cbind(c("Default Group *", "Male", "20-24 years old", "25-34 years old", "35-44 years old", "45-54 years old", "55-64 years old", "65 years old and older", "Tired Smoking", "Tried Cannabis"), oddstable)
+rownames(oddstable) <- NULL
+
+kable(oddstable, col.names=c("", "Estimated Odds Ratio"), caption = "Summary of Final Model Odds Ratio Estimates With Respect to the Default Group", booktabs = TRUE) %>% 
+   kable_styling() %>%
+   add_footnote("Default Group: Female, 15-19 years old, Never Tried Smoking, and Never Tried Cannabis", notation = "symbol")
+
+```
+
+Therefore, since the coefficients in the model are multiplicative, it is easier to interpret the reference group with the estimated probability and odds ratio for each explanatory variable. Then, the probability of trying Vaping for the first time in the default group with the gender being Female, the age group being 15-19 years old, never tried smoking and cannabis for the first time is estimated to be approximately 66%. 
+
+If the respondent identifies as Male and by holding all other values constant, the model estimates that the odds of the respondent trying vaping for the first time is on average 0.57 times the odds of those who identify with the Female gender. This means that by holding all other values constant, the odds of the respondent trying vaping for the first time of those who identify with the Female gender is $\frac{1}{0.57} \approx 1.75$ times that of those who identify as Male.
+
+If the respondent is part of the 20-24 years old age group and by holding all other values constant, the model estimates that the odds of the respondent trying vaping for the first time is on average 0.21 times the odds of those who are part of the 15-19 years old age group. This means that by holding all other values constant, the odds of the respondent trying vaping for the first time of those who are part of the 15-19 years old age group is $\frac{1}{0.21} \approx 4.76$ times that of those who are part of the 20-24 years old age group.
+
+Similarly, if the respondent is part of the 25-34 years old age group and by holding all other values constant, the model estimates that the odds of the respondent trying vaping for the first time is on average 0.02 times the odds of those who are part of the 15-19 years old age group. This means that by holding all other values constant, the odds of the respondent trying vaping for the first time of those who are part of the 15-19 years old age group is $\frac{1}{0.02} \approx 50$ times that of those who are part of the 25-34 years old age group.
+
+\newpage
+
+Then, if the respondent is part of the 35-44 years old age group, 45-54 years old age group, 55-64 years old age group, or 65 years old and older age group and by holding all other values constant, the model estimates that the odds of the respondent trying vaping for the first time is on average 0.002, 0.001, 0.0008 and 0 times the odds of those who are part of the 15-19 years old age group, respectively.
+
+If the respondent has tried smoking in their lifetime and by holding all other values constant, the model estimates that the odds of the respondent trying vaping for the first time is on average 0.33 times the odds of those who have never tried smoking in their lifetime. This means that by holding all other values constant, the odds of the respondent trying vaping for the first time of those who have never tried smoking in their lifetime is $\frac{1}{0.33} \approx 3.03$ times that of those who have tried smoking in their lifetime.
+
+Similarly, if the respondent has tried cannabis in their lifetime and by holding all other values constant, the model estimates that the odds of the respondent trying vaping for the first time is on average 0.47 times the odds of those who have never tried cannabis in their lifetime. This means that by holding all other values constant, the odds of the respondent trying vaping for the first time of those who have never tried cannabis in their lifetime is $\frac{1}{0.47} \approx 2.12$ times that of those who have tried cannabis in their lifetime.
+
+These results seem reasonable since teenagers are expected to have a higher probability to try vaping compared to older age groups (Canada, 2021). Surprisingly, the Female gender has a higher probability of trying vaping in comparison to the Male gender. As for the variables on whether or not the respondent has tried smoking or cannabis before, this result follows from what was expected. That is, the odds of the respondent trying vaping for the first time is higher if they had tried smoking before, compared to those who had tried cannabis before. This is probably because vaping is more commonly marketed to smokers than cannabis users (Canada, 2020). 
+
+# Conclusions
+
+Predicting the probability of trying vaping for the first time based on a survey is not as straightforward. Many aspects need to be taken into account given that it is observational data. Overall, the results were somewhat as predicted in the hypothesis. That is, having tried smoking before will affect the probability of a person trying vaping for the first time, but it is not the biggest factor. In short, the main method used in this analysis was Propensity Score Matching. This method was used to emphasize distinct treatment and control groups from observational data. In the case of this study, the observational data came from the Canadian Tobacco and Nicotine Survey, and the intended treatment and control groups were those who had tried smoking before and those who had not, respectively. In the end, this created a reduced dataset with an equal size of observations that are in the treatment group as there are in the control group. This new dataset was then used to create a Logistic Regression model to determine the probability of trying vaping for the first time where whether or not the respondent had previously tried smoking is one of the explanatory variables.  
+
+All in all, the model estimated that having previously tried smoking increased the estimated odd of trying vaping for the first time more than those who had only previously tried cannabis. Furthermore, it was also hypothesized that those who are of the teenage age group have a higher probability to try vaping for the first time compared to other age groups. The model confirmed this part of the hypothesis by comparing the 15-19 years old age group to the other age groups. For instance, the odds of 15-19 years old trying vaping for the first time is nearly 5 times that of 20-24 years old. These odds increased exponentially as the 15-19 years old age group were compared to the even older age groups. For this reason, it had become clear that age is the biggest factor in determining whether or not one would try vaping for the first time.
+
+This key result was no surprise because teenagers are known to be susceptible to social influences. It was found that those who had friends who vaped were more likely to try vaping themselves (Canada, 2021). However, the most unexpected result from this analysis was that the odds of trying vaping for the first time of those who identify as the Female gender are nearly double that of those who identify as the Male gender. That is, those who identify as the Female gender are twice as likely to try vaping compared to those of the Male gender. The only conclusion that can be drawn from this result is that those of the Female gender may be more susceptible to social influences.
+
+## Weaknesses and Limitations
+
+There are many limitations to all analyses, but the major limitation of this analysis is the fact that the results may appear causal but are not. This is because the dataset used for the model is based on a survey, which is observational data. Given that the treatment in question is smoking, there is no way to get experimental data due to ethical concerns. Consequently, it is the main reason for using Propensity Score Matching as it is a popular way to form mock treatment and control groups from observational data. 
+
+A limitation of the smoking and cannabis usage explanatory variables in the model is that there is no difference between a respondent who tried the product once and one who uses it often. For example, a respondent who had one puff of smoke and then never smoked again and would be considered the same observation as a respondent who smokes daily. 
+
+Besides weaknesses of the overall analysis, there are also some weaknesses from using the Propensity Score Matching method as well. A notable weakness is that when the data is being matched, it is only being matched to the observations that are already in the dataset (Alexander, 2021). This means that it is only matching based on the variables and samples of the original dataset and nothing else. This brings up the main component that they are being matched by which is the propensity score determined by a model. It is no doubt that different models will produce different results (Alexander, 2021). Depending on the model used, there can be significantly more matches or no matches at all. 
+
+## Next Steps
+
+There are many ways that this analysis can be taken further. One for instance is that there are many other explanatory variables directly related to the response variable that can be used such as accessibility to vaping products, number of friends who vape, personal health concerns about vaping, etc. It is also possible to further classify respondents to the order in which they tried each product, i.e., smoking, cannabis, and/or vaping if they had tried more than one. A deeper analysis to consider is looking at the factors that contribute to a user who vapes regularly.
+
+It would also be beneficial to take a deeper look into the effect caused by gender. A limitation of the dataset is that it assumed that gender is binary, prompting some to not respond to the question in the survey, hence rendering their observation obsolete. Thus, it is possible to redo the survey with a non-binary gender response to possibly get a different result than the one in this analysis.
+
+## Discussion
+
+In essence. youth are found to be most prone to trying vaping, which is a call for concern. As a product that is relatively new to the market, there is a lack of research on its health effects compared to smoking. What is known is that vaping contains nicotine which is a harmful and addictive drug (Canada, 2021). This analysis has found that although vaping is marketed to smokers, the odds of a smoker trying vaping for the first time are lower than that of a youth. In other words, age is the biggest factor in affecting the change in the probability of one trying vaping for the first time. Given these points, this result is solely based on this analysis from observational data. To better understand any topic more research is needed to be done and more time is needed for longitudinal studies.  
+
+
+# Bibliography
+
+1. Alexander, R. (2021, August 24).  *Telling Stories With Data. Telling Stories With Data*. Retrieved December 15, 2021, from  [https://www.tellingstorieswithdata.com/](https://www.tellingstorieswithdata.com/). 
+
+2. Andrew Gelman and Jennifer Hill. (2006).  *Data Analysis Using Regression and Multilevel/Hierarchical Models*. Cambridge University Press.
+
+3. Canada, H. (2013, March 7). *Government of Canada*. Canada.ca. Retrieved December 10, 2021, from [https://www.canada.ca/en/health-canada/services/smoking-tobacco/effects-smoking/smoking-your-body/nicotine-addiction.html](https://www.canada.ca/en/health-canada/services/smoking-tobacco/effects-smoking/smoking-your-body/nicotine-addiction.html).
+
+4. Canada, H. (2016, May 17). *Government of Canada*. Canada.ca. Retrieved December 10, 2021, from [https://www.canada.ca/en/health-canada/services/smoking-tobacco/effects-smoking/smoking-your-body/risks-smoking.html](https://www.canada.ca/en/health-canada/services/smoking-tobacco/effects-smoking/smoking-your-body/risks-smoking.html).
+
+5. Canada, H. (2020, June 12). *Government of Canada*. Canada.ca. Retrieved December 10, 2021, from [https://www.canada.ca/en/health-canada/services/smoking-tobacco/vaping/smokers.html](https://www.canada.ca/en/health-canada/services/smoking-tobacco/vaping/smokers.html).
+
+6. Canada, H. (2021, February 5). *Government of Canada*. Canada.ca. Retrieved December 10, 2021, from [https://www.canada.ca/en/health-canada/services/smoking-tobacco/preventing/vaping.html](https://www.canada.ca/en/health-canada/services/smoking-tobacco/preventing/vaping.html).
+
+7. Government of Canada, S. C. (2018, February 7). *Population and dwelling count highlight tables, 2016 census*. – Canada, provinces and territories. Retrieved December 15, 2021, from [https://www12.statcan.gc.ca/census-recensement/2016/dp-pd/hlt-fst/pd-pl/Table.cfm?Lang=Eng&T=101&SR=1&S=3&O=D#tPopDwell](https://www12.statcan.gc.ca/census-recensement/2016/dp-pd/hlt-fst/pd-pl/Table.cfm?Lang=Eng&T=101&SR=1&S=3&O=D#tPopDwell)
+
+8. Government of Canada, S. C. (2020, December 4). *Canadian tobacco and Nicotine Survey (CTNS)*. Surveys and statistical programs. Retrieved November 28, 2021, from [https://www23.statcan.gc.ca/imdb/p2SV.pl?Function=getSurvey&Id=1291039](https://www23.statcan.gc.ca/imdb/p2SV.pl?Function=getSurvey&Id=1291039). 
+
+
+\newpage
+
+# Appendix
+
+## A1: Ethics Statement
+
+As an individual doing research and analysis in statistics, it is of utmost priority to exercise proper ethical practices. The dataset used in this analysis has been directly sourced from open data. This data is made publicly available and free to be used by anyone. The survey data has been ensured to be free of any private information that may disclose the identities of the respondents. Following the use of open data, all sourced information, including the data, has been properly referenced and cited in the bibliography. This guarantees that the research and work done by other individuals are given credit where credit is due. Lastly, the code for analysis has been made to be open source to provide transparency and allow for reproducibility of the results. This is important to avoid any bias or p-hacking that can be done to manipulate the findings in the analysis. It is recognized that upholding these aspects will encourage others to do the same to create a better statistics community.
+
+## A2:  Materials
+
+Here is a glimpse of the Canadian Tobacco and Nicotine Survey dataset:
+
+```{r, echo=FALSE}
+
+glimpse(raw_ctns_data)
+
+```
+
+Here is a glimpse of the cleaned dataset:
+
+```{r, echo=FALSE}
+
+glimpse(survey_data)
+
+```
+
+Here is a glimpse of the matched dataset:
+
+```{r, echo=FALSE}
+
+glimpse(survey_data_matched)
+
+```
+
+## Supplementary Tables and Plots
+
+```{r, echo = FALSE}
+
+smokedtable <- table(survey_data_matched$smoked)
+rownames(smokedtable) <- c("False", "True")
+kable(smokedtable, col.names=c("Smoked Before", "Frequency"), caption = "Summary of Matched Dataset by whether or not they Smoked", booktabs = TRUE) %>%
+  kable_styling(latex_options = "HOLD_position")
+
+```
+
+```{r, echo = FALSE}
+
+huxreg("Full Model" = model1, "Without First Product Tried First" = model2, "Without Province and Whether or Not They Vape" = model3, error_pos = "right", statistics = "") %>% 
+  set_caption("Summary of Models for Model Selction") %>% 
+  set_width(1) %>%
+  set_lr_padding(0.5) %>%
+  set_row_height(0) %>% 
+  set_font_size(8)
+
+```
