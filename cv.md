@@ -12,9 +12,18 @@ _Mathematics and Statistical Sciences Graduate_ <br>
 
 ## Education
 
+**Financial Technology Boot Camp** <br>
+<sup>_(May 2023 - October 2023)_ </sup> <br>
+_[University of Toronto School of Continuing Studies](https://bootcamp.learn.utoronto.ca/fintech/), Toronto, ON_
+  - Completing a 24-week Financial Technology Boot Camp focused on financial fundamentals, blockchain and cryptocurrency, machine learning applications in finance, and programming and financial libraries.
+  - Developing a strong understanding of cutting-edge financial technologies and their applications in the financial industry through rigorous coursework, hands-on projects, and collaborative team work. 
+
+
 **Honours Bachelor Of Science in Mathematics and Statistics** <br>
 <sup>_(September 2018 - August 2022)_ </sup> <br>
 _[University of Toronto (St. George)](https://www.utoronto.ca/), Toronto, ON_
+  - Mathematics & Its Applications Specialist (Probability/Statistics) and Statistics program graduate.
+  - Graduated with Distinction (3.22 CGPA).
 
 ## Technical Skills
 
