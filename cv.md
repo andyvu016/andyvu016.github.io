@@ -10,6 +10,9 @@ _Mathematics and Statistical Sciences Graduate_ <br>
 
 [Email](mailto:andy.vu@alum.utoronto.ca) / [GitHub](https://github.com/andyvu016/) / [LinkedIn](https://www.linkedin.com/in/andy-vu-a01214265/)
 
+This page showcases my portfolio of work and project history. <br>
+If you would like to see a formal summary of my experience and qualifications, please view my resume [here]({{ site.url }}/assets/Andy_Vu_Resume.pdf){:target="_blank"}.
+
 ## Education
 
 **Financial Technology Boot Camp** <br>
