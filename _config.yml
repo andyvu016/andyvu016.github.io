@@ -2,8 +2,8 @@
 theme: jekyll-theme-minimal
 title: Andy Vu
 description: |
-  Digital Curriculum Vitae
+  Digital Curriculum Vitae <br>
   
   [View My Formal Resume](https://andyvu016.github.io/assets/Andy_Vu_Resume.pdf)
 ---
-{{ project.description | markdownify }}
+{{ page.description | markdownify }}
