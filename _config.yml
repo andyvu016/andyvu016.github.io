@@ -1,6 +1,9 @@
+---
 theme: jekyll-theme-minimal
 title: Andy Vu
 description: |
   Digital Curriculum Vitae
   This page showcases my portfolio of work and project history.
   If you would like to see a formal summary of my experience and qualifications, please view my resume [here]({{ site.url }}/assets/Andy_Vu_Resume.pdf){:target="_blank"}.}
+---
+{{ project.description | markdownify }}
