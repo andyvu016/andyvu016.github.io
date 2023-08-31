@@ -32,7 +32,10 @@ _[University of Toronto (St. George)](https://www.utoronto.ca/), Toronto, ON_
     ◦ RStudio  
   - **Python** (NumPy, pandas)  
     ◦ PyCharm <br>
-    ◦ WING  
+    ◦ WING <br>
+    ◦ Visual Studio Code <br>
+    ◦ JupyterLab
+  - **SQL**
   - **Java**  
     ◦ IntelliJ IDEA  
   - **HTML & CSS**   
@@ -40,6 +43,7 @@ _[University of Toronto (St. George)](https://www.utoronto.ca/), Toronto, ON_
 
 #### Software and Applications:
   - **Git/GitHub**
+  - **Amazon Web Services** (Amazon Lex, Amazon SageMaker, Lambda)
   - **Microsoft Office** (Word, Excel, Outlook, Powerpoint, OneNote, Forms, Access)
   - **Google Docs Editors** (Docs, Sheets, Slides, Keep, Forms)
   - **Adobe Creative Suite** (Acrobat, Photoshop, Premiere Pro, After Effects) 
@@ -54,6 +58,12 @@ _[University of Toronto (St. George)](https://www.utoronto.ca/), Toronto, ON_
   - Awarded the **Most Engaged Member** recognition for exceptional contributions and active participation in the club.
 
 ## Projects
+**Analyzing Weather Data for Climate Trends** _Data Analysis Project_ (Python, [GitHub](https://github.com/ssjaweid/project1team1-1)) <br>
+<sup>_(July 2023)_ </sup> <br>
+  - Collaborated with three peers on an analysis project to determine climate trends in the last 50 years using hurricane, drought and temperature data.
+  - Extended the dataset by developing a function that travese it and initiate API calls.
+  - Utilized the **`pandas`** package extensively to clean and prepare the data for visualizations with the **`hvPlot`** package.
+
 [**Analyzing the Gateway to Vaping**]({{ site.url }}/assets/sta304_final_project.pdf){:target="_blank"} _Data Analysis Report_ ([R](https://github.com/andyvu016/andyvu016.github.io/blob/gh-pages/assets/sta304_final_project.Rmd)) <br>
 <sup>_(December 2021)_ </sup> <br>
   - Wrangled survey data collected through The Canadian Tobacco and Nicotine Survey with the **`tidyr`** and **`dplyr`** packages.
