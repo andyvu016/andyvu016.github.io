@@ -30,7 +30,7 @@ _[University of Toronto (St. George)](https://www.utoronto.ca/), Toronto, ON_
 #### Languages and IDEs:
   - **R** (dplyr, ggplot2, forcats, tibble, tidyr, Knitr)  
     ◦ RStudio  
-  - **Python** (NumPy, pandas)  
+  - **Python** (pandas, scikit-learn, NumPy)  
     ◦ PyCharm <br>
     ◦ WING <br>
     ◦ Visual Studio Code <br>
