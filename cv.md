@@ -58,6 +58,12 @@ _[University of Toronto (St. George)](https://www.utoronto.ca/), Toronto, ON_
   - Awarded the **Most Engaged Member** recognition for exceptional contributions and active participation in the club.
 
 ## Projects
+[**Check First**](https://check-first.streamlit.app/) _Machine Learning Project_ (Python, [GitHub](https://github.com/andyvu016/project2-team2)) <br>
+<sup>_(September 2023)_ </sup> <br>
+  - Collaborated with three peers on a Machine Learning project to create an application aimed at using advanced models to assess the risk of common health diseases, with a particular focus on Chronic Obstructive Pulmonary Disease and Dementia.
+  - Extensive use of the **`scikit-learn`** package to preprocess the data as well as train, test and evaluate machine learning models utilizing support vector machine, k-nearest neighbors, ensemble-based methods and naive bayes algorithms.
+  - Employment of the **`tensorflow`** package to train and test a sequential neural network deep learning models. 
+
 **Analyzing Weather Data for Climate Trends** _Data Analysis Project_ (Python, [GitHub](https://github.com/ssjaweid/project1team1-1)) <br>
 <sup>_(July 2023)_ </sup> <br>
   - Collaborated with three peers on an analysis project to determine climate trends in the last 50 years using hurricane, drought and temperature data.
