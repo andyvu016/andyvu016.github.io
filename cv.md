@@ -20,7 +20,7 @@ _[University of Toronto School of Continuing Studies](https://bootcamp.learn.uto
 
 
 **Honours Bachelor Of Science in Mathematics and Statistics** <br>
-<sup>_(September 2018 - August 2022)_ </sup> <br>
+<sup>_(September 2018 - November 2022)_ </sup> <br>
 _[University of Toronto (St. George)](https://www.utoronto.ca/), Toronto, ON_
   - Mathematics & Its Applications Specialist (Probability/Statistics) and Statistics program graduate.
   - Graduated with Distinction (3.22 CGPA).
