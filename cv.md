@@ -60,7 +60,7 @@ _[University of Toronto (St. George)](https://www.utoronto.ca/), Toronto, ON_
   - Awarded the **Most Engaged Member** recognition for exceptional contributions and active participation in the club.
 
 ## Projects
-[**Blockchain Car Marketplace **](https://github.com/a-melino/Project-3-Blockchain-Car-Marketplace)  _Blockchain Project_ (Solidity, Python, [GitHub](https://github.com/a-melino/Project-3-Blockchain-Car-Marketplace)) <br>
+[**Blockchain Car Marketplace**](https://github.com/a-melino/Project-3-Blockchain-Car-Marketplace)  _Blockchain Project_ (Solidity, Python, [GitHub](https://github.com/a-melino/Project-3-Blockchain-Car-Marketplace)) <br>
 <sup>_(October 2023)_ </sup> <br>
   - Collaborated in a team contributing to the creation of a car marketplace on the Ethereum blockchain, taking the lead in implementing machine learning functionalities.
   - From a dataset of 4000+ used cars, cleaned, encoded, and evaluated models using the **`pandas`** and **`scikit-learn`** package, ultimately selecting the Gradient Boosting Regressor for its superior performance.
