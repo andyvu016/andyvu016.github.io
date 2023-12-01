@@ -8,15 +8,15 @@ permalink: /
 
 _Mathematics and Statistical Sciences Graduate_ <br>
 
-[Email](mailto:andy.vu@alum.utoronto.ca) / [GitHub](https://github.com/andyvu016/) / [LinkedIn](https://www.linkedin.com/in/andy-vu-a01214265/)
+[Email](mailto:andy.vu@alum.utoronto.ca) / [GitHub](https://github.com/andyvu016/) / [LinkedIn](https://www.linkedin.com/in/andyvu016/)
 
 ## Education
 
 **Financial Technology Boot Camp** <br>
 <sup>_(May 2023 - October 2023)_ </sup> <br>
 _[University of Toronto School of Continuing Studies](https://bootcamp.learn.utoronto.ca/fintech/), Toronto, ON_
-  - Completing a 24-week Financial Technology Boot Camp focused on financial fundamentals, blockchain and cryptocurrency, machine learning applications in finance, and programming and financial libraries.
-  - Developing a strong understanding of cutting-edge financial technologies and their applications in the financial industry through rigorous coursework, hands-on projects, and collaborative team work. 
+  - Completed a 24-week Financial Technology Boot Camp focused on financial fundamentals, blockchain and cryptocurrency, machine learning applications in finance, and programming and financial libraries.
+  - Developed a strong understanding of cutting-edge financial technologies and their applications in the financial industry through rigorous coursework, hands-on projects, and collaborative team work. 
 
 
 **Honours Bachelor Of Science in Mathematics and Statistics** <br>
@@ -37,7 +37,9 @@ _[University of Toronto (St. George)](https://www.utoronto.ca/), Toronto, ON_
     ◦ JupyterLab
   - **SQL**
   - **Java**  
-    ◦ IntelliJ IDEA  
+    ◦ IntelliJ IDEA
+  - **Solidity**  
+    ◦ Remix IDE 
   - **HTML & CSS**   
   - **LaTeX**
 
@@ -58,9 +60,15 @@ _[University of Toronto (St. George)](https://www.utoronto.ca/), Toronto, ON_
   - Awarded the **Most Engaged Member** recognition for exceptional contributions and active participation in the club.
 
 ## Projects
+[**Blockchain Car Marketplace **](https://github.com/a-melino/Project-3-Blockchain-Car-Marketplace)  _Blockchain Project_ (Solidity, Python, [GitHub](https://github.com/a-melino/Project-3-Blockchain-Car-Marketplace)) <br>
+<sup>_(October 2023)_ </sup> <br>
+  - Collaborated in a team contributing to the creation of a car marketplace on the Ethereum blockchain, taking the lead in implementing machine learning functionalities.
+  - From a dataset of 4000+ used cars, cleaned, encoded, and evaluated models using the **`pandas`** and **`scikit-learn`** package, ultimately selecting the Gradient Boosting Regressor for its superior performance.
+  - Developed an Ethereum Smart Contract backend and implemented functionalities for minting NFTs, facilitating ownership transfers, and enabling users to effortlessly list, query, and purchase cars through an intuitive Streamlit interface.
+
 [**Check First**](https://check-first.streamlit.app/) _Machine Learning Project_ (Python, [GitHub](https://github.com/andyvu016/project2-team2)) <br>
 <sup>_(September 2023)_ </sup> <br>
-  - Collaborated with three peers on a Machine Learning project to create an application aimed at using advanced models to assess the risk of common health diseases, with a particular focus on Chronic Obstructive Pulmonary Disease and Dementia.
+  - Initiated and guided a collaborative effort with three peers in a Machine Learning project to create an application aimed at using advanced models to assess the risk of common health diseases, with a particular focus on Chronic Obstructive Pulmonary Disease and Dementia.
   - Extensive use of the **`scikit-learn`** package to preprocess the data as well as train, test and evaluate machine learning models utilizing support vector machine, k-nearest neighbors, ensemble-based methods and naive bayes algorithms.
   - Employment of the **`tensorflow`** package to train and test a sequential neural network deep learning models. 
 
